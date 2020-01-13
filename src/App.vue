@@ -1,27 +1,36 @@
 <template>
   <div id="app">
-    <img alt="Vue logo" src="./assets/logo.png" />
-    <HelloWorld msg="Welcome to Your Vue.js App" />
+    <menus />
+    <desktop />
   </div>
 </template>
 
 <script>
-import HelloWorld from "./components/HelloWorld.vue";
+import desktop from "./components/Desktop.vue";
+import menus from "./components/Menu.vue";
 
 export default {
   name: "app",
   components: {
-    HelloWorld
+    menus,
+    desktop
   }
 };
 </script>
 
 <style lang="stylus">
+body
+  height 100%
+
+html
+  height 100%
+
 #app
   font-family 'Avenir', Helvetica, Arial, sans-serif
   -webkit-font-smoothing antialiased
   -moz-osx-font-smoothing grayscale
   text-align center
   color #2c3e50
-  margin-top 60px
+  height  100%
+  width 100%
 </style>
