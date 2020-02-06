@@ -59,10 +59,12 @@ export default {
     },
     Dragging(e) {
       if (this.isdragging) {
-        this.active_task.top += e.y - this.y;
+        if (this.active_task.top + e.y - this.y > 40) {
+          this.active_task.top += e.y - this.y;
+          this.y = e.y;
+        }
         this.active_task.left += e.x - this.x;
         this.x = e.x;
-        this.y = e.y;
       }
     },
     endDragging() {
