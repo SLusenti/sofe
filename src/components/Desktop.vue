@@ -1,12 +1,12 @@
 <template>
   <div class="desktop">
-    <b-row v-for="(array_item, index) in arrays" :key="array+index.toString()" class="item">
-      <b-col class="align-self-center" v-for="( element, id ) in array_item" :key="element.name" @drop="onDropCallback($event, element, id, array_item)" @dragover="allowDrop($event)">
+    <div v-for="(array_item, index) in arrays" :key="array+index.toString()" class="item">
+      <div class="align-self-center" v-for="( element, id ) in array_item" :key="element.name" @drop="onDropCallback($event, element, id, array_item)" @dragover="allowDrop($event)">
         <div draggable="true" @dragstart="onDragCallback($event, element, id, array_item)">
           <icon :isdragging="dragging.isdragging" :hname="element.name" :hicon="element.href" />
         </div>
-      </b-col>
-    </b-row>
+      </div>
+    </div>
   </div>
 </template>
 

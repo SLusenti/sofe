@@ -1,52 +1,309 @@
 <template>
-  <b-container class="bv-example-row menu">
-    <b-row>
-      <b-col sm="1" class="align-self-center" style="justify-content: flex-start">
-        <b-button>
-          <b-icon icon="list"></b-icon>
-        </b-button>
-      </b-col>
-      <b-col class="align-self-center">
-        <b-row>
-          <b-col class="align-right">
-            <img src="https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fmaxcdn.icons8.com%2Fwindows8%2FPNG%2F512%2FLogos%2Fopenstack_copyrighted-512.png&f=1&nofb=1" width="40" height="30">
-          </b-col>
-          <b-col>
-            <div class="title"> SOFE </div>
-          </b-col>
-        </b-row>
-      </b-col>
-      <b-col></b-col>
-      <b-col></b-col>
-    </b-row>
-  </b-container>
+  <div class="menu">
+    <div class="menu-container">
+      <div class="menu-container-item">
+        <div class="menu-button">
+          <div class="app-menu"></div>
+        </div>
+      </div>
+      <div class="menu-container-item">
+        <div class="menu-button">
+          <div class="app-system"></div>
+        </div>
+      </div>
+      <div class="menu-container-item PanelItemWindowList menu-expand">
+        <ul class="menu-button">
+          <li :class="{ active: isActive(id) }" v-for="(item, id) in active_task" :key="item.name">
+            <div class="app-icon" :class="item.icon"></div>
+            <span>{{ item.name }}</span>
+          </li>
+        </ul>
+      </div>
+      <div class="menu-container-item">
+        <div class="menu-button" @click="openFullscreen">
+          <div class="view-fullscreen"></div>
+        </div>
+      </div>
+      <div class="menu-container-item">
+        <div class="menu-button">
+          <div class="user" id="user" @click="showUserMenu"></div>
+        </div>
+      </div>
+      <div class="menu-container-item">
+        <div class="menu-button PanelItemClock">
+          <span>{{ time }}</span>
+        </div>
+      </div>
+    </div>
+  </div>
 </template>
 
 <script>
-export default {};
+import moment from "moment"
+
+export default {
+  data() {
+    return {
+      active_task: [
+        {
+          icon: "help-browser",
+          name: "Welcome",
+          ref: ""
+        },
+        {
+          icon: "help-browser",
+          name: "Welcome1",
+          ref: ""
+        }
+      ],
+      active_item: 0,
+      time: moment().format("DD/MMM/YYYY HH:mm"),
+    };
+  },
+  methods: {
+    isActive(id) {
+      return this.active_item == id;
+    },
+    openFullscreen() {
+      var e = document.getElementById("app");
+      if (e.requestFullscreen) {
+        e.requestFullscreen();
+      } else if (e.mozRequestFullScreen) {
+        /* Firefox */
+        e.mozRequestFullScreen();
+      } else if (e.webkitRequestFullscreen) {
+        /* Chrome, Safari and Opera */
+        e.webkitRequestFullscreen();
+      } else if (e.msRequestFullscreen) {
+        /* IE/Edge */
+        e.msRequestFullscreen();
+      }
+    },
+    showUserMenu() {
+      this.$emit(
+        "showUserMenu",
+        document.getElementById("user").getBoundingClientRect().x
+      );
+    }
+  },
+  mounted() {
+    setInterval(() => {
+      this.time = moment().format("DD/MMM/YYYY HH:mm");
+    }, 5000);
+  }
+};
 </script>
 
 <style lang="stylus" scoped>
-div.align-right
-  text-align right 
+.PanelItemClock {
+  font-family: Monospace, Courier New;
+  font-weight: 400;
+  text-align: right;
+}
 
-div.menu
-  width 100%
-  height 12mm
-  background-color rgb(238, 30, 72)
-  max-width 100%
-  text-align left
+.app-icon {
+  margin-right: 0.33em;
+}
 
-div.row
-  height 100%
+li > span {
+  max-width: 200px;
+}
 
-div.title
-  font-family: 'Alatsi';
-  font-size: 22px;
+.active {
+  opacity: 1 !important;
+  font-size: 12px !important;
+}
 
-button
-  background-color rgba(0,0,0,0)
-  border-color rgb(255,255,255)
-  padding-top 0
-  padding-bottom 0
+li {
+  min-width: 16px;
+  min-height: 16px;
+  -webkit-flex: 1 1 auto;
+  -moz-flex: 1 1 auto;
+  -ms-flex: 1 1 auto;
+  -o-flex: 1 1 auto;
+  flex: 1 1 auto;
+  justify-content: center;
+  -ms-flex-align: center;
+  -webkit-box-align: center;
+  -moz-box-align: center;
+  -ms-box-align: center;
+  -o-box-align: center;
+  margin-right: 0.33em;
+  margin-left: 0.33em;
+  font-size: 11px;
+}
+
+li, .menu-button {
+  position: relative;
+  box-sizing: border-box;
+  display: -webkit-box;
+  display: -moz-box;
+  display: -ms-flexbox;
+  display: -webkit-flex;
+  display: flex;
+  -webkit-align-items: center;
+  -moz-align-items: center;
+  align-items: center;
+}
+
+.PanelItemWindowList li > span {
+  max-width: 200px;
+}
+
+.menu-ellipsis span {
+  display: inline-block;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  -o-text-overflow: ellipsis;
+}
+
+.menu-ellipsis {
+  display: inline-block;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  -o-text-overflow: ellipsis;
+}
+
+ul {
+  margin: 0;
+  padding: 0;
+}
+
+.menu .PanelItemWindowList li {
+  opacity: 0.5;
+}
+
+.menu .PanelItemWindowList li.Focused {
+  opacity: 1;
+}
+
+.menu-container > .menu-expand {
+  -webkit-flex: 1 1 auto;
+  -moz-flex: 1 1 auto;
+  -ms-flex: 1 1 auto;
+  -o-flex: 1 1 auto;
+  flex: 1 1 auto;
+}
+
+.menu-button {
+  list-style: none;
+  z-index: 10;
+  -ms-flex-align: center;
+  cursor: pointer;
+  margin-right: 0.33em;
+  margin-left: 0.33em;
+}
+
+.help-browser {
+  background-image: url('assets/help-browser.png');
+  height: 16px;
+  width: 16px;
+}
+
+.app-menu {
+  background-image: url('assets/app-menu.png');
+  height: 16px;
+  width: 16px;
+}
+
+.app-system {
+  background-image: url('assets/app-system.png');
+  height: 16px;
+  width: 16px;
+}
+
+.user {
+  background-image: url('assets/user.png');
+  height: 16px;
+  width: 16px;
+}
+
+.view-fullscreen {
+  background-image: url('assets/view-fullscreen.png');
+  height: 16px;
+  width: 16px;
+}
+
+.menu-container-item {
+  height: 100%;
+  box-sizing: border-box;
+  -webkit-flex: 0 0 auto;
+  -moz-flex: 0 0 auto;
+  -ms-flex: 0 0 auto;
+  -o-flex: 0 0 auto;
+  flex: 0 0 auto;
+}
+
+.menu-container, .menu-container-item {
+  display: -webkit-box;
+  display: -moz-box;
+  display: -ms-flexbox;
+  display: -webkit-flex;
+  display: flex;
+}
+
+.menu-container {
+  position: relative;
+  z-index: 10;
+  justify-content: center;
+  -ms-flex-align: center;
+  -webkit-align-items: center;
+  -moz-align-items: center;
+  align-items: center;
+  -webkit-box-align: center;
+  -moz-box-align: center;
+  -ms-box-align: center;
+  -o-box-align: center;
+  -webkit-flex-wrap: nowrap;
+  -moz-flex-wrap: nowrap;
+  -ms-flex-wrap: nowrap;
+  -o-flex-wrap: nowrap;
+  flex-wrap: nowrap;
+  width: calc(100% - 0.66em);
+  min-height: 16px;
+  height: 16px;
+  padding: 0.66em;
+}
+
+div.menu {
+  display: block;
+  position: absolute;
+  overflow: hidden;
+  z-index: 9999998;
+  margin: 0;
+  box-sizing: border-box;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  top: 0;
+  left: 0;
+  right: 0;
+  color: #fff;
+  padding: 0.33em;
+  background: #101010;
+  box-shadow: 0 0 10px 1px rgba(34, 34, 34, 0.3);
+  opacity: 0.85;
+}
+
+.menu:before {
+  content: '';
+  display: block;
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 1;
+}
+
+button {
+  background-color: rgba(0, 0, 0, 0);
+  border-color: rgb(255, 255, 255);
+  padding-top: 0;
+  padding-bottom: 0;
+}
 </style>

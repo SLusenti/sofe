@@ -2,12 +2,12 @@
   <div class="icon" :class="{bordert: printborder, border_hover:isdragging}">
     <div v-if="isprintable">
       <img :id="imgid" :src="hicon" height="42" width="42"> 
-      <b-popover
+      <div
           :target="imgid"
           :title="hname"
           triggers="hover focus"
           placement="bottom"
-        ></b-popover>
+        ></div>
     </div>
     <div v-else>
       <div class="empty">
@@ -53,4 +53,5 @@ div.icon
   margin-bottom 10px
   padding-bottom 10px
   padding-top 10px
+  cursor pointer
 </style>
