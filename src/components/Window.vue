@@ -1,84 +1,76 @@
 <template>
-  <div class="application-window" :style="style" :class="{active: isActive}">
-    <div
-      class="application-window-top"
-      @mousedown="initDragging"
-      @mousemove="Dragging"
-      @mouseleave="endDragging"
-      @mouseup="endDragging"
-    >
-      <div class="application-window-icon" :class="[active_task.icon]"></div>
+  <div
+    class="application-window"
+    :style="style"
+    :class="{active: isActive}"
+    v-if="!activeTask.minimized"
+    @click="activate"
+  >
+    <div class="application-window-top" @mousedown="initDragging">
+      <div class="application-window-icon" :class="[activeTask.icon]"></div>
       <div class="application-window-title" :class="{active: isActive}">
-        <span>{{ this.active_task.name }}</span>
+        <span>{{ this.activeTask.name }}</span>
       </div>
       <div class="application-window-top-button">
-        <div class="application-window-button-minimize"></div>
+        <div class="application-window-button-minimize" @click="min"></div>
       </div>
       <div class="application-window-top-button">
-        <div class="application-window-button-maximize"></div>
+        <div class="application-window-button-maximize" @click="max"></div>
       </div>
       <div class="application-window-top-button">
-        <div class="application-window-button-close"></div>
+        <div class="application-window-button-close" @click="close"></div>
       </div>
     </div>
     <div class="application-window-content">
       <slot />
     </div>
+    <div class="application-resize" @mousedown="resize"></div>
   </div>
 </template>
 
 <script>
 export default {
+  props: ["winID", "activeTask"],
   data() {
     return {
-      active_task: {
-        icon: "help-browser",
-        name: "Welcome",
-        ref: "",
-        draggable: true,
-        resizable: true,
-        top: 59,
-        left: 26,
-        width: 500,
-        height: 500
-      },
-      active_item: 0,
-      isdragging: false,
-      x: 0,
-      y: 0,
       isActive: true
     };
   },
   methods: {
     initDragging(e) {
-      if (this.active_task.draggable) {
-        this.isdragging = true;
-        this.x = e.x;
-        this.y = e.y;
-      }
+      this.$emit("initDrag", e);
     },
-    Dragging(e) {
-      if (this.isdragging) {
-        if (this.active_task.top + e.y - this.y > 40) {
-          this.active_task.top += e.y - this.y;
-          this.y = e.y;
-        }
-        this.active_task.left += e.x - this.x;
-        this.x = e.x;
-      }
+    max() {
+      this.$emit("max");
     },
-    endDragging() {
-      if (this.isdragging) {
-        this.isdragging = false;
-      }
+    min() {
+      this.$emit("min");
+    },
+    resize(e) {
+      this.$emit("initResize", e);
+    },
+    close() {
+      this.$emit("close");
+    },
+    activate() {
+      this.$emit("activate");
     }
   },
   computed: {
     style() {
-      return `top: ${this.active_task.top}px;
-              left: ${this.active_task.left}px;
-              width: ${this.active_task.width}px;
-              height: ${this.active_task.height}px;`;
+      if (this.activeTask.fullsize) {
+        console.log("max");
+        return `top: 40px;
+              left: 0px;
+              right: 0px;
+              bottom: 0px;`;
+      } else {
+        console.log("normal");
+        return `top: ${this.activeTask.top}px;
+              left: ${this.activeTask.left}px;
+              width: ${this.activeTask.width}px;
+              height: ${this.activeTask.height}px;`;
+      }
     }
   }
 };
@@ -95,9 +87,19 @@ export default {
   z-index: 1;
 }
 
+.application-resize {
+  position: absolute;
+  height: 10px;
+  width: 10px;
+  right: 0;
+  bottom: 0;
+  z-index: 2;
+  cursor: nwse-resize;
+}
+
 .gui-menu-entry {
   color: #242424;
-  padding-right: 16px
+  padding-right: 16px;
 }
 
 .gui-menu-entry>label {

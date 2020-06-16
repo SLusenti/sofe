@@ -1,13 +1,30 @@
 <template>
-  <div id="app" @click="clearMenu" @contextmenu="displayMenu">
-    <menus @showUserMenu="showUserMenu" />
+  <div
+    id="app"
+    @mousemove="Dragging($event)"
+    @click="clearMenu"
+    @contextmenu="displayMenu"
+    @mouseup="endDragging"
+  >
+    <menus @showUserMenu="showUserMenu" :activeTask="win" @activate="activate($event)" />
     <guimenu v-if="user_menu.show" :x="user_menu.x" :y="user_menu.y" :option="user_menu.opt" />
-    <window />
+    <window
+      v-for="(item, indx) in win"
+      :key="indx"
+      @initDrag="initDragging($event,indx,'d')"
+      @max="item.fullsize = !item.fullsize"
+      @min="item.minimized = true"
+      @close="win.splice(indx,1)"
+      @initResize="initDragging($event,indx,'r')"
+      @activate="activate(indx)"
+      :activeTask="item"
+    />
     <guimenu
       v-if="menu.show"
       :option="menu.opt"
       :x="menu.x"
       :y="menu.y"
+      :winID="getWinID()"
       @change="console.log($event)"
     />
   </div>
@@ -23,6 +40,34 @@ export default {
   name: "app",
   data() {
     return {
+      win: [
+        {
+          icon: "help-browser",
+          name: "Welcome",
+          ref: "",
+          resizable: true,
+          top: 59,
+          left: 26,
+          width: 500,
+          height: 500,
+          fullsize: false,
+          minimized: false,
+          active: true
+        },
+        {
+          icon: "help-browser-1",
+          name: "Welcome 1",
+          ref: "",
+          resizable: true,
+          top: 59,
+          left: 26,
+          width: 500,
+          height: 500-26,
+          fullsize: false,
+          minimized: false,
+          active: false
+        }
+      ],
       menu: {
         show: false,
         x: 600,
@@ -35,7 +80,11 @@ export default {
         y: 40,
         show: false
       },
-      clearMenuUser: true
+      clearMenuUser: true,
+      x: 0,
+      y: 1,
+      indx: -1,
+      ctype: "n"
     };
   },
   mounted() {
@@ -48,6 +97,53 @@ export default {
     });
   },
   methods: {
+    activate(id) {
+      //console.log(id);
+      for (var v in this.win) {
+        this.win[v].active = false;
+      }
+      this.win[id].active = true;
+      this.win[id].minimized = false;
+    },
+    initDragging(e, id, t) {
+      //console.log("init",e, id, t);
+      if (!this.win[id].fullsize) {
+        this.ctype = t;
+        this.x = e.x;
+        this.y = e.y;
+        this.indx = id;
+      }
+    },
+    Dragging(e) {
+      if (this.indx != -1) {
+        //console.log(this.ctype)
+        if (this.ctype === "d") {
+          if (e.y > 40) {
+            this.win[this.indx].top += e.y - this.y;
+            this.y = e.y;
+          }
+          this.win[this.indx].left += e.x - this.x;
+          this.x = e.x;
+        } else if (this.ctype === "r") {
+          if (this.win[this.indx].width > 60) {
+            //console.log("x:",e.x - this.x, e.x, this.x)
+            this.win[this.indx].width += e.x - this.x;
+            this.x = e.x;
+          }
+          if (this.win[this.indx].height > 60)  {
+            //console.log("y:",e.y - this.y, e.y, this.y)
+            this.win[this.indx].height += e.y - this.y;
+            this.y = e.y;
+          }
+        }
+      }
+    },
+    endDragging() {
+      if (this.indx != -1) {
+        this.indx = -1;
+        this.ctype = "n";
+      }
+    },
     displayMenu(e) {
       this.menu.show = true;
       this.menu.x = e.x;
@@ -60,6 +156,10 @@ export default {
       this.clearMenuUser = false;
       this.user_menu.x = e - 20;
       this.user_menu.show = true;
+    },
+    getWinID() {
+      this.winID += 1;
+      return this.winID;
     }
   },
   components: {

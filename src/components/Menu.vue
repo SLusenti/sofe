@@ -13,7 +13,7 @@
       </div>
       <div class="menu-container-item PanelItemWindowList menu-expand">
         <ul class="menu-button">
-          <li :class="{ active: isActive(id) }" v-for="(item, id) in active_task" :key="item.name">
+          <li :class="{ active: item.active }" v-for="(item, id) in activeTask" @click="$emit('activate',id)" :key="id">
             <div class="app-icon" :class="item.icon"></div>
             <span>{{ item.name }}</span>
           </li>
@@ -42,28 +42,14 @@
 import moment from "moment"
 
 export default {
+   props: ["activeTask"],
   data() {
     return {
-      active_task: [
-        {
-          icon: "help-browser",
-          name: "Welcome",
-          ref: ""
-        },
-        {
-          icon: "help-browser",
-          name: "Welcome1",
-          ref: ""
-        }
-      ],
       active_item: 0,
       time: moment().format("DD/MMM/YYYY HH:mm"),
     };
   },
   methods: {
-    isActive(id) {
-      return this.active_item == id;
-    },
     openFullscreen() {
       var e = document.getElementById("app");
       if (e.requestFullscreen) {
