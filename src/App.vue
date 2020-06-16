@@ -118,8 +118,18 @@ export default {
     openApp(id) {
       //console.log(id)
       var app = this.app[id];
-      app.active = true;
-      this.win.push(app);
+      var qadd = -1;
+      for (var a in this.win) {
+        if (app.name == this.win[a].name) {
+          qadd = a;
+        }
+      }
+      if (qadd == -1) {
+        this.win.push(app);
+        this.activate(this.win.length-1)
+      } else {
+        this.activate(qadd)
+      }
     },
     activate(id) {
       //console.log(id);
