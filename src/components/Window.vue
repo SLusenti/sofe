@@ -2,12 +2,23 @@
   <div
     class="application-window"
     :style="style"
-    :class="{active: isActive}"
+    :class="{
+      active: activeTask.active,
+      'active-top': activeTask.active,
+      'active-bottom': !activeTask.active
+    }"
     v-if="!activeTask.minimized"
   >
-    <div class="application-window-top" >
-      <div class="application-window-icon" @mousedown="initDragging" :class="[activeTask.icon]"></div>
-      <div class="application-window-title" @mousedown="initDragging" :class="{active: isActive}">
+    <div class="application-window-top">
+      <div
+        class="application-window-icon"
+        @mousedown="initDragging"
+        :class="[activeTask.icon]"
+      ></div>
+      <div class="application-window-title" 
+          @mousedown="initDragging" 
+          :class="{active: isActive}"
+        >
         <span>{{ this.activeTask.name }}</span>
       </div>
       <div class="application-window-top-button">
@@ -20,7 +31,7 @@
         <div class="application-window-button-close" @click="close"></div>
       </div>
     </div>
-    <div class="application-window-content " @click="activate">
+    <div class="application-window-content" @click="activate">
       <slot />
     </div>
     <div class="application-resize" @mousedown="resize"></div>
@@ -76,6 +87,14 @@ export default {
 </script>
 
 <style lang="stylus" scoped>
+.active-top {
+  z-index: 10;
+}
+
+.active-bottom {
+  z-index: 5;
+}
+
 .application-window-content {
   background: #fff;
   position: absolute;
@@ -252,9 +271,8 @@ export default {
 
 .application-window {
   position: absolute;
-  z-index: 9;
   overflow: visible;
-  opacity: 0.8;
+  opacity: 0.9;
   margin-top: 2.5em;
 }
 
