@@ -59,13 +59,13 @@ export default {
   computed: {
     style() {
       if (this.activeTask.fullsize) {
-        console.log("max");
+        //console.log("max");
         return `top: 40px;
               left: 0px;
               right: 0px;
               bottom: 0px;`;
       } else {
-        console.log("normal");
+        //console.log("normal");
         return `top: ${this.activeTask.top}px;
               left: ${this.activeTask.left}px;
               width: ${this.activeTask.width}px;
