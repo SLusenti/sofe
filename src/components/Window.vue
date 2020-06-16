@@ -8,17 +8,12 @@
       'active-bottom': !activeTask.active
     }"
     v-if="!activeTask.minimized"
+    @mouseenter="$emit('changeOpt')"
+    @mouseleave="$emit('clearOpt')"
   >
     <div class="application-window-top">
-      <div
-        class="application-window-icon"
-        @mousedown="initDragging"
-        :class="[activeTask.icon]"
-      ></div>
-      <div class="application-window-title" 
-          @mousedown="initDragging" 
-          :class="{active: isActive}"
-        >
+      <div class="application-window-icon" @mousedown="initDragging" :class="[activeTask.icon]"></div>
+      <div class="application-window-title" @mousedown="initDragging" :class="{active: isActive}">
         <span>{{ this.activeTask.name }}</span>
       </div>
       <div class="application-window-top-button">
@@ -211,10 +206,6 @@ export default {
   -ms-flex: 1 1 auto;
   -o-flex: 1 1 auto;
   flex: 1 1 auto;
-}
-
-.help-browser {
-  background-image: url('assets/help-browser.png');
 }
 
 .application-window-top-button {

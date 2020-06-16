@@ -1,7 +1,13 @@
 <template>
-  <div class="gui-menu" :style="style">
-    <div class="gui-menu-entry" v-for="(opt, id) in option" :key="opt" @click="$emit('change',id)">
-      <label>{{ opt }}</label>
+  <div class="gui-menu" :style="style" @mouseleave="$emit('dontChange')">
+    <div class="gui-menu-entry" v-for="(opt, id) in option" :key="id" @click="$emit('change',id)">
+      <div v-if="typeof opt == typeof 'string'">
+        <label>{{ opt }}</label>
+      </div>
+      <div v-else class="mainMenu" @click="$emit('openApp', id)">
+        <div class="app-icon" :class="opt.icon"></div>
+        <span>{{ opt.name }}</span>
+      </div>
     </div>
   </div>
 </template>
@@ -18,6 +24,11 @@ export default {
 </script>
 
 <style lang="stylus" scoped>
+.app-icon {
+  margin-right: 10px;
+  float: left;
+}
+
 .gui-menu {
   display: inline-block;
   position: relative;
@@ -38,8 +49,16 @@ export default {
   white-space: nowrap;
   display: block;
   position: relative;
-  text-align: center;
+  text-align: left;
   cursor: pointer;
+}
+
+span {
+  display: inline-block;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  -o-text-overflow: ellipsis;
 }
 
 label {
@@ -58,5 +77,12 @@ label {
 
 .gui-menu-entry:hover {
   background-color: #2d73d2;
+}
+
+.mainMenu {
+  min-width: 16px;
+  min-height: 16px;
+  margin-top: 5px;
+  font-size: 14px;
 }
 </style>

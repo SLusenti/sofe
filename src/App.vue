@@ -1,13 +1,19 @@
 <template>
   <div
     id="app"
+    @contextmenu="displayMenu"
     @mousemove="Dragging($event)"
     @click="clearMenu"
-    @contextmenu="displayMenu"
     @mouseup="endDragging"
   >
-    <menus @showUserMenu="showUserMenu" :activeTask="win" @activate="activate($event)" />
+    <menus
+      @showUserMenu="showUserMenu"
+      @showMenu="showMenu"
+      :activeTask="win"
+      @activate="activate($event)"
+    />
     <guimenu v-if="user_menu.show" :x="user_menu.x" :y="user_menu.y" :option="user_menu.opt" />
+    <guimenu v-if="mainMenu" :x="0" :y="40" :option="app" @openApp="openApp" />
     <window
       v-for="(item, indx) in win"
       :key="indx"
@@ -17,15 +23,18 @@
       @close="win.splice(indx,1)"
       @initResize="initDragging($event,indx,'r')"
       @activate="activate(indx)"
+      @changeOpt="changeOpt(item.opt)"
+      @clearOpt="changeOpt([])"
       :activeTask="item"
     />
     <guimenu
+      @dontChange="dontchange = false"
       v-if="menu.show"
       :option="menu.opt"
       :x="menu.x"
       :y="menu.y"
       :winID="getWinID()"
-      @change="console.log($event)"
+      @change="change"
     />
   </div>
 </template>
@@ -40,7 +49,8 @@ export default {
   name: "app",
   data() {
     return {
-      win: [
+      win: [],
+      app: [
         {
           icon: "help-browser",
           name: "Welcome",
@@ -52,7 +62,8 @@ export default {
           height: 500,
           fullsize: false,
           minimized: false,
-          active: true
+          active: true,
+          opt: ["option1 a", "option2 v", "option3 hh", "option4 tt"]
         },
         {
           icon: "help-browser",
@@ -62,17 +73,18 @@ export default {
           top: 59,
           left: 26,
           width: 500,
-          height: 500-26,
+          height: 500 - 26,
           fullsize: false,
           minimized: false,
-          active: false
+          active: false,
+          opt: ["option1", "option2", "option3", "option4"]
         }
       ],
       menu: {
         show: false,
         x: 600,
         y: 50,
-        opt: ["option1", "option2", "option3", "option4"]
+        opt: []
       },
       user_menu: {
         opt: ["Logout", "Lock user"],
@@ -84,7 +96,9 @@ export default {
       x: 0,
       y: 1,
       indx: -1,
-      ctype: "n"
+      ctype: "n",
+      mainMenu: false,
+      dontchange: false
     };
   },
   mounted() {
@@ -92,11 +106,21 @@ export default {
       this.menu.show = false;
       if (this.clearMenuUser) {
         this.user_menu.show = false;
+        this.mainMenu = false;
       }
       this.clearMenuUser = true;
     });
   },
   methods: {
+    change() {
+      //console.log(e);
+    },
+    openApp(id) {
+      //console.log(id)
+      var app = this.app[id];
+      app.active = true;
+      this.win.push(app);
+    },
     activate(id) {
       //console.log(id);
       for (var v in this.win) {
@@ -104,6 +128,15 @@ export default {
       }
       this.win[id].active = true;
       this.win[id].minimized = false;
+    },
+    changeOpt(opt) {
+      //console.log(opt.length > 0, this.dontchange);
+      if (opt.length == 0 && !this.dontchange) {
+        this.menu.opt = [];
+        this.menu.show = false;
+      } else if (opt.length > 0) {
+        this.menu.opt = opt;
+      }
     },
     initDragging(e, id, t) {
       this.activate(id);
@@ -131,7 +164,7 @@ export default {
             this.win[this.indx].width += e.x - this.x;
             this.x = e.x;
           }
-          if (this.win[this.indx].height > 60)  {
+          if (this.win[this.indx].height > 60) {
             //console.log("y:",e.y - this.y, e.y, this.y)
             this.win[this.indx].height += e.y - this.y;
             this.y = e.y;
@@ -146,17 +179,27 @@ export default {
       }
     },
     displayMenu(e) {
-      this.menu.show = true;
-      this.menu.x = e.x;
-      this.menu.y = e.y;
+      this.dontchange = true;
+      //console.log(e);
+      if (this.menu.opt.length > 0) {
+        this.menu.show = true;
+        this.menu.x = e.x;
+        this.menu.y = e.y;
+      }
     },
     clearMenu() {
       this.$root.$emit("clear_menu");
     },
     showUserMenu(e) {
+      this.mainMenu = false;
       this.clearMenuUser = false;
       this.user_menu.x = e - 20;
       this.user_menu.show = true;
+    },
+    showMenu() {
+      this.user_menu.show = false;
+      this.clearMenuUser = false;
+      this.mainMenu = true;
     },
     getWinID() {
       this.winID += 1;
@@ -202,5 +245,35 @@ html {
   background-position: center;
   background-repeat: no-repeat;
   background-position: 50%;
+}
+
+.help-browser {
+  background-image: url('components/assets/help-browser.png');
+  height: 16px;
+  width: 16px;
+}
+
+.app-menu {
+  background-image: url('components/assets/app-menu.png');
+  height: 16px;
+  width: 16px;
+}
+
+.app-system {
+  background-image: url('components/assets/app-system.png');
+  height: 16px;
+  width: 16px;
+}
+
+.user {
+  background-image: url('components/assets/user.png');
+  height: 16px;
+  width: 16px;
+}
+
+.view-fullscreen {
+  background-image: url('components/assets/view-fullscreen.png');
+  height: 16px;
+  width: 16px;
 }
 </style>

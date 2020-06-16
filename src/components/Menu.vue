@@ -3,7 +3,7 @@
     <div class="menu-container">
       <div class="menu-container-item">
         <div class="menu-button">
-          <div class="app-menu"></div>
+          <div class="app-menu" @click="showMenu"></div>
         </div>
       </div>
       <div class="menu-container-item">
@@ -70,6 +70,9 @@ export default {
         "showUserMenu",
         document.getElementById("user").getBoundingClientRect().x
       );
+    },
+    showMenu() {
+      this.$emit("showMenu");
     }
   },
   mounted() {
@@ -180,36 +183,6 @@ ul {
   cursor: pointer;
   margin-right: 0.33em;
   margin-left: 0.33em;
-}
-
-.help-browser {
-  background-image: url('assets/help-browser.png');
-  height: 16px;
-  width: 16px;
-}
-
-.app-menu {
-  background-image: url('assets/app-menu.png');
-  height: 16px;
-  width: 16px;
-}
-
-.app-system {
-  background-image: url('assets/app-system.png');
-  height: 16px;
-  width: 16px;
-}
-
-.user {
-  background-image: url('assets/user.png');
-  height: 16px;
-  width: 16px;
-}
-
-.view-fullscreen {
-  background-image: url('assets/view-fullscreen.png');
-  height: 16px;
-  width: 16px;
 }
 
 .menu-container-item {
