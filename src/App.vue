@@ -12,8 +12,8 @@
       v-for="(item, indx) in win"
       :key="indx"
       @initDrag="initDragging($event,indx,'d')"
-      @max="item.fullsize = !item.fullsize"
-      @min="item.minimized = true"
+      @max="activate(indx);item.fullsize = !item.fullsize"
+      @min="activate(indx);item.minimized = true"
       @close="win.splice(indx,1)"
       @initResize="initDragging($event,indx,'r')"
       @activate="activate(indx)"
@@ -55,7 +55,7 @@ export default {
           active: true
         },
         {
-          icon: "help-browser-1",
+          icon: "help-browser",
           name: "Welcome 1",
           ref: "",
           resizable: true,
@@ -106,6 +106,7 @@ export default {
       this.win[id].minimized = false;
     },
     initDragging(e, id, t) {
+      this.activate(id);
       //console.log("init",e, id, t);
       if (!this.win[id].fullsize) {
         this.ctype = t;

@@ -4,11 +4,10 @@
     :style="style"
     :class="{active: isActive}"
     v-if="!activeTask.minimized"
-    @click="activate"
   >
-    <div class="application-window-top" @mousedown="initDragging">
-      <div class="application-window-icon" :class="[activeTask.icon]"></div>
-      <div class="application-window-title" :class="{active: isActive}">
+    <div class="application-window-top" >
+      <div class="application-window-icon" @mousedown="initDragging" :class="[activeTask.icon]"></div>
+      <div class="application-window-title" @mousedown="initDragging" :class="{active: isActive}">
         <span>{{ this.activeTask.name }}</span>
       </div>
       <div class="application-window-top-button">
@@ -21,7 +20,7 @@
         <div class="application-window-button-close" @click="close"></div>
       </div>
     </div>
-    <div class="application-window-content">
+    <div class="application-window-content " @click="activate">
       <slot />
     </div>
     <div class="application-resize" @mousedown="resize"></div>
@@ -183,7 +182,6 @@ export default {
   z-index: 1;
   overflow: hidden;
   white-space: nowrap;
-  pointer-events: none;
   -webkit-text-overflow: ellipsis;
   -moz-text-overflow: ellipsis;
   -ms-text-overflow: ellipsis;
