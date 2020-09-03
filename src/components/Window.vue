@@ -27,18 +27,21 @@
       </div>
     </div>
     <div class="application-window-content" @click="activate">
-      <slot />
+      <comp></comp>
     </div>
     <div class="application-resize" @mousedown="resize"></div>
   </div>
 </template>
 
 <script>
+import LoadingComponent from './LoadingComponent'
+import ErrorComponent from './ErrorComponent'
 export default {
-  props: ["winID", "activeTask"],
+  props: ["winID", "activeTask", "refurl"],
   data() {
     return {
-      isActive: true
+      isActive: true,
+      loading: false
     };
   },
   methods: {
@@ -77,6 +80,16 @@ export default {
               height: ${this.activeTask.height}px;`;
       }
     }
+  },
+  components: {
+    comp: () => ({
+  component: import('./apps/DBshow'),
+  loading: LoadingComponent,
+  error: ErrorComponent,
+  // The error component will be displayed if a timeout is
+  // provided and exceeded. Default: Infinity.
+  timeout: 3000
+})
   }
 };
 </script>
@@ -236,6 +249,7 @@ export default {
 }
 
 .application-window-top {
+  align-items: center;
   min-width: 1em;
   min-height: 1em;
   -webkit-flex: 0 0 auto;

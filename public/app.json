@@ -1,0 +1,59 @@
+[
+    {
+      "icon": "help-browser",
+      "name": "Welcome",
+      "ref": "",
+      "resizable": true,
+      "top": 59,
+      "left": 26,
+      "width": 500,
+      "height": 474,
+      "fullsize": false,
+      "minimized": false,
+      "active": true,
+      "opt": [
+            "option1 a",
+            "option2 v",
+            "option3 hh",
+            "option4 tt"
+        ]
+    },
+    {
+      "icon": "help-browser",
+      "name": "Welcome 1",
+      "ref": "",
+      "resizable": true,
+      "top": 59,
+      "left": 26,
+      "width": 500,
+      "height": 474,
+      "fullsize": false,
+      "minimized": false,
+      "active": false,
+      "opt": [
+            "option1",
+            "option2",
+            "option3",
+            "option4"
+        ]
+    },
+    {
+      "icon": "help-browser",
+      "name": "Show Region - R1",
+      "ref": "DBshow-v1",
+      "resizable": true,
+      "top": 59,
+      "left": 26,
+      "width": 500,
+      "height": 474,
+      "fullsize": false,
+      "minimized": false,
+      "active": false,
+      "opt": [
+            "option1",
+            "option2",
+            "option3",
+            "option4"
+        ]
+    }
+]

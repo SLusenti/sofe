@@ -17,16 +17,17 @@
     <window
       v-for="(item, indx) in win"
       :key="indx"
+      :refurl="item.ref"
       @initDrag="initDragging($event,indx,'d')"
       @max="activate(indx);item.fullsize = !item.fullsize"
-      @min="activate(indx);item.minimized = true"
-      @close="win.splice(indx,1)"
+      @min="activate(indx);item.minimized = true;menu.opt = []"
+      @close="win.splice(indx,1);menu.opt = []"
       @initResize="initDragging($event,indx,'r')"
       @activate="activate(indx)"
       @changeOpt="changeOpt(item.opt)"
       @clearOpt="changeOpt([])"
       :activeTask="item"
-    />
+    ></window>
     <guimenu
       @dontChange="dontchange = false"
       v-if="menu.show"
@@ -44,42 +45,15 @@
 import menus from "./components/Menu.vue";
 import Window from "./components/Window.vue";
 import guimenu from "./components/GuiMenu.vue";
+import axios from 'axios'
 
 export default {
   name: "app",
   data() {
     return {
       win: [],
-      app: [
-        {
-          icon: "help-browser",
-          name: "Welcome",
-          ref: "",
-          resizable: true,
-          top: 59,
-          left: 26,
-          width: 500,
-          height: 500,
-          fullsize: false,
-          minimized: false,
-          active: true,
-          opt: ["option1 a", "option2 v", "option3 hh", "option4 tt"]
-        },
-        {
-          icon: "help-browser",
-          name: "Welcome 1",
-          ref: "",
-          resizable: true,
-          top: 59,
-          left: 26,
-          width: 500,
-          height: 500 - 26,
-          fullsize: false,
-          minimized: false,
-          active: false,
-          opt: ["option1", "option2", "option3", "option4"]
-        }
-      ],
+      app: [],
+      ref:"",
       menu: {
         show: false,
         x: 600,
@@ -110,6 +84,12 @@ export default {
       }
       this.clearMenuUser = true;
     });
+    window.location.origin
+    axios
+      .get(window.location.origin+'/app.json')
+      .then(response => (
+        this.app = response.data
+      ));
   },
   methods: {
     change() {
