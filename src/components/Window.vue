@@ -5,15 +5,19 @@
     :class="{
       active: activeTask.active,
       'active-top': activeTask.active,
-      'active-bottom': !activeTask.active
+      'active-bottom': !activeTask.active,
     }"
     v-if="!activeTask.minimized"
     @mouseenter="$emit('changeOpt')"
     @mouseleave="$emit('clearOpt')"
   >
     <div class="application-window-top">
-      <div class="application-window-icon" @mousedown="initDragging" :class="[activeTask.icon]"></div>
-      <div class="application-window-title" @mousedown="initDragging" :class="{active: isActive}">
+      <div
+        class="application-window-icon"
+        @mousedown="initDragging"
+        :class="[activeTask.icon]"
+      ></div>
+      <div class="application-window-title" @mousedown="initDragging" :class="{ active: isActive }">
         <span>{{ this.activeTask.name }}</span>
       </div>
       <div class="application-window-top-button">
@@ -34,35 +38,35 @@
 </template>
 
 <script>
-import LoadingComponent from './LoadingComponent'
-import ErrorComponent from './ErrorComponent'
+import LoadingComponent from './LoadingComponent.vue'
+import ErrorComponent from './ErrorComponent.vue'
 export default {
-  props: ["winID", "activeTask", "refurl"],
+  props: ['activeTask', 'refurl'],
   data() {
     return {
       isActive: true,
-      loading: false
-    };
+      loading: false,
+    }
   },
   methods: {
     initDragging(e) {
-      this.$emit("initDrag", e);
+      this.$emit('initDrag', e)
     },
     max() {
-      this.$emit("max");
+      this.$emit('max')
     },
     min() {
-      this.$emit("min");
+      this.$emit('min')
     },
     resize(e) {
-      this.$emit("initResize", e);
+      this.$emit('initResize', e)
     },
     close() {
-      this.$emit("close");
+      this.$emit('close')
     },
     activate() {
-      this.$emit("activate");
-    }
+      this.$emit('activate')
+    },
   },
   computed: {
     style() {
@@ -71,27 +75,27 @@ export default {
         return `top: 40px;
               left: 0px;
               right: 0px;
-              bottom: 0px;`;
+              bottom: 0px;`
       } else {
         //console.log("normal");
         return `top: ${this.activeTask.top}px;
               left: ${this.activeTask.left}px;
               width: ${this.activeTask.width}px;
-              height: ${this.activeTask.height}px;`;
+              height: ${this.activeTask.height}px;`
       }
-    }
+    },
   },
   components: {
     comp: () => ({
-  component: import('./apps/DBshow'),
-  loading: LoadingComponent,
-  error: ErrorComponent,
-  // The error component will be displayed if a timeout is
-  // provided and exceeded. Default: Infinity.
-  timeout: 3000
-})
-  }
-};
+      component: import('./apps/DBshow.vue'),
+      loading: LoadingComponent,
+      error: ErrorComponent,
+      // The error component will be displayed if a timeout is
+      // provided and exceeded. Default: Infinity.
+      timeout: 3000,
+    }),
+  },
+}
 </script>
 
 <style lang="stylus" scoped>

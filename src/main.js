@@ -1,25 +1,26 @@
-import Vue from "vue";
-import App from "./App.vue";
+import { createApp } from 'vue'
+import App from './App.vue'
+import router from './router'
 
-Vue.config.productionTip = false;
+document.onkeydown = (e) => {
+  e.preventDefault()
+  e.stopPropagation()
+}
+document.onclick = (e) => {
+  e.preventDefault()
+  e.stopPropagation()
+}
+document.ondblclick = (e) => {
+  e.preventDefault()
+  e.stopPropagation()
+}
+document.oncontextmenu = (e) => {
+  e.preventDefault()
+  e.stopPropagation()
+}
 
-document.onkeydown = e => {
-  e.preventDefault();
-  e.stopPropagation();
-};
-document.onclick = e => {
-  e.preventDefault();
-  e.stopPropagation();
-};
-document.ondblclick = e => {
-  e.preventDefault();
-  e.stopPropagation();
-};
-document.oncontextmenu = e => {
-  e.preventDefault();
-  e.stopPropagation();
-};
+const app = createApp(App)
 
-new Vue({
-  render: h => h(App)
-}).$mount("#app");
+app.use(router)
+
+app.mount('#app')
