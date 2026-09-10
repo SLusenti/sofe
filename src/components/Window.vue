@@ -31,15 +31,17 @@
       </div>
     </div>
     <div class="application-window-content" @click="activate">
-      <comp></comp>
+      <comp />
     </div>
     <div class="application-resize" @mousedown="resize"></div>
   </div>
 </template>
 
 <script>
+import { defineAsyncComponent, hydrateOnIdle  } from 'vue'
 import LoadingComponent from './LoadingComponent.vue'
 import ErrorComponent from './ErrorComponent.vue'
+
 export default {
   props: ['activeTask', 'refurl'],
   data() {
@@ -86,13 +88,12 @@ export default {
     },
   },
   components: {
-    comp: () => ({
-      component: import('./apps/DBshow.vue'),
-      loading: LoadingComponent,
-      error: ErrorComponent,
-      // The error component will be displayed if a timeout is
-      // provided and exceeded. Default: Infinity.
+    comp: defineAsyncComponent({
+      loader: () => import('./apps/DBshow.vue'),
+      loadingComponent: LoadingComponent,
+      errorComponent: ErrorComponent,
       timeout: 3000,
+      hydrate: hydrateOnIdle(3000)
     }),
   },
 }
